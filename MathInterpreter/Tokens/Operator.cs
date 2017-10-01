@@ -5,7 +5,7 @@ namespace MathInterpreter.Tokens
     public struct Operator : IToken
     {
         public static Operator Add = new Operator("+");
-        public static Operator Substract = new Operator("-");
+        public static Operator Subtract = new Operator("-");
         public static Operator Multiply = new Operator("*");
         public static Operator Divide = new Operator("/");
         public static Operator Power = new Operator("^");
@@ -31,7 +31,7 @@ namespace MathInterpreter.Tokens
         {
             if (this == Add)
                 return new Number(first.Value + second.Value);
-            else if (this == Substract)
+            else if (this == Subtract)
                 return new Number(first.Value - second.Value);
             else if (this == Multiply)
                 return new Number(first.Value * second.Value);
@@ -45,12 +45,12 @@ namespace MathInterpreter.Tokens
 
         public bool LeftAssociative()
         {
-            return this == Add || this == Substract || this == Multiply || this == Divide;
+            return this == Add || this == Subtract || this == Multiply || this == Divide;
         }
 
         private static int Precedence(Operator op)
         {
-            if (op == Add || op == Substract)
+            if (op == Add || op == Subtract)
                 return 0;
             if (op == Multiply || op == Divide)
                 return 1;
