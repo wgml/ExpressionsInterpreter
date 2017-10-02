@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Policy;
-using static MathInterpreter.Tokens.Tokens;
 
 namespace MathInterpreter.Tokens
 {
@@ -8,10 +6,10 @@ namespace MathInterpreter.Tokens
     {
         public readonly uint Precedence;
         public readonly Associativity Assoc;
-        private readonly Func<Number, Number, Number> _action;
+        private readonly Func<Value, Value, Value> _action;
 
         internal Operator(string token, uint precedence,
-            Associativity associativity, Func<Number, Number, Number> action)
+            Associativity associativity, Func<Value, Value, Value> action)
             : base(token)
         {
             Precedence = precedence;
@@ -24,7 +22,7 @@ namespace MathInterpreter.Tokens
             return Precedence >= other.Precedence;
         }
 
-        public Number Evaluate(Number first, Number second)
+        public Value Evaluate(Value first, Value second)
         {
             return _action(first, second);
         }

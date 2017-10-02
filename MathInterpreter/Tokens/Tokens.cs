@@ -5,13 +5,16 @@ namespace MathInterpreter.Tokens
     public abstract class Tokens
     {
         public static readonly Operator Add = new Operator("+", 0, Associativity.Left, (op1, op2) => op1 + op2);
-        public static Operator Subtract = new Operator("-", 0, Associativity.Left, (op1, op2) => op1 - op2);
-        public static Operator Multiply = new Operator("*", 1, Associativity.Left, (op1, op2) => op1 * op2);
-        public static Operator Divide = new Operator("/", 1, Associativity.Left, (op1, op2) => op1 / op2);
-        public static Operator Power = new Operator("^", 2, Associativity.Right, (op1, op2) => Math.Pow(op1, op2));
+        public static readonly Operator Subtract = new Operator("-", 0, Associativity.Left, (op1, op2) => op1 - op2);
+        public static readonly Operator Multiply = new Operator("*", 1, Associativity.Left, (op1, op2) => op1 * op2);
+        public static readonly Operator Divide = new Operator("/", 1, Associativity.Left, (op1, op2) => op1 / op2);
 
-        public static Token LeftBracket = "(";
-        public static Token RightBracket = ")";
+        public static readonly Operator Power = new Operator("^", 2, Associativity.Right,
+            (op1, op2) => Math.Pow(op1, op2));
+
+        public static readonly Token LeftBracket = "(";
+        public static readonly Token RightBracket = ")";
+        public static readonly Token Assignment = "=";
 
         public static Token Of(string token)
         {
@@ -31,8 +34,10 @@ namespace MathInterpreter.Tokens
                     return LeftBracket;
                 case ")":
                     return RightBracket;
+                case "=":
+                    return Assignment;
                 default:
-                    throw new ArgumentException("Unknown token: " + token);
+                    return new Token(token);
             }
         }
     }

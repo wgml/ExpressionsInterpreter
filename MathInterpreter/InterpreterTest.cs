@@ -4,6 +4,9 @@ namespace MathInterpreter
 {
     public class InterpreterTest
     {
+
+        public Interpreter Interpreter = new Interpreter();
+        
         [Fact]
         public void TestSingleNumber()
         {
