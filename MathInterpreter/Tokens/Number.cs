@@ -2,7 +2,7 @@
 
 namespace MathInterpreter.Tokens
 {
-    public  struct Number : IToken
+    public class Number : IToken
     {
         public readonly double Value;
 
@@ -14,6 +14,16 @@ namespace MathInterpreter.Tokens
         public Number(double value)
         {
             Value = value;
+        }
+
+        public static implicit operator Number(double value)
+        {
+            return new Number(value);
+        }
+
+        public static implicit operator double(Number number)
+        {
+            return number.Value;
         }
 
         public override string ToString()

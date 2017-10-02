@@ -64,6 +64,9 @@
     <Compile Include="Tokens\IToken.cs" />
     <Compile Include="Tokens\Number.cs" />
     <Compile Include="Tokens\Operator.cs" />
+    <Compile Include="Tokens\Associativity.cs" />
+    <Compile Include="Tokens\Token.cs" />
+    <Compile Include="Tokens\Tokens.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

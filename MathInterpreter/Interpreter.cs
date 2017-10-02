@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.ComTypes;
 using MathInterpreter.Tokens;
 
 namespace MathInterpreter
 {
     public class Interpreter
     {
-        
         public static double Evaluate(string tokenString)
         {
             tokenString = Spaceify(tokenString);
@@ -33,8 +30,8 @@ namespace MathInterpreter
         private static IEnumerable<IToken> Tokenize(IEnumerable<string> tokens)
         {
             var outputQueue = new Queue<IToken>();
-            var operatorsStack = new Stack<Operator>();
-            
+            var operatorsStack = new Stack<Token>();
+
             foreach (var token in tokens)
             {
                 if (IsNumber(token))
@@ -43,14 +40,15 @@ namespace MathInterpreter
                 }
                 else
                 {
-                    var op = new Operator(token);
-                    if (op == Operator.LeftBracket)
+                    var op = Tokens.Tokens.Of(token);
+
+                    if (op == Tokens.Tokens.LeftBracket)
                     {
                         operatorsStack.Push(op);
                     }
-                    else if (op == Operator.RightBracket)
+                    else if (op == Tokens.Tokens.RightBracket)
                     {
-                        while (operatorsStack.Peek() != Operator.LeftBracket)
+                        while (operatorsStack.Peek() != Tokens.Tokens.LeftBracket)
                         {
                             outputQueue.Enqueue(operatorsStack.Pop());
                         }
@@ -60,8 +58,10 @@ namespace MathInterpreter
                     {
                         while (operatorsStack.Count > 0)
                         {
-                            var stackOp = operatorsStack.Peek();
-                            if (stackOp.Precedent(op) && stackOp.LeftAssociative())
+                            var stackToken = operatorsStack.Peek();
+                            var stackOp = stackToken as Operator;
+
+                            if (stackOp != null && (stackOp.Precedent(op as Operator) && stackOp.LeftAssociative()))
                             {
                                 outputQueue.Enqueue(operatorsStack.Pop());
                             }

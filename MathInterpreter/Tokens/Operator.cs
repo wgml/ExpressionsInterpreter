@@ -1,93 +1,37 @@
 ﻿using System;
+using System.Security.Policy;
+using static MathInterpreter.Tokens.Tokens;
 
 namespace MathInterpreter.Tokens
 {
-    public struct Operator : IToken
+    public class Operator : Token
     {
-        public static Operator Add = new Operator("+");
-        public static Operator Subtract = new Operator("-");
-        public static Operator Multiply = new Operator("*");
-        public static Operator Divide = new Operator("/");
-        public static Operator Power = new Operator("^");
+        public readonly uint Precedence;
+        public readonly Associativity Assoc;
+        private readonly Func<Number, Number, Number> _action;
 
-        public static Operator LeftBracket = new Operator("(");
-        public static Operator RightBracket = new Operator(")");
-
-        public readonly char Value;
-
-        public Operator(string token)
+        internal Operator(string token, uint precedence,
+            Associativity associativity, Func<Number, Number, Number> action)
+            : base(token)
         {
-            if (token.Length != 1)
-                throw new ArgumentException("Invalid token: " + token);
-            Value = token[0];
+            Precedence = precedence;
+            Assoc = associativity;
+            _action = action;
         }
 
         public bool Precedent(Operator other)
         {
-            return Precedence(this) >= Precedence(other);
+            return Precedence >= other.Precedence;
         }
 
         public Number Evaluate(Number first, Number second)
         {
-            if (this == Add)
-                return new Number(first.Value + second.Value);
-            else if (this == Subtract)
-                return new Number(first.Value - second.Value);
-            else if (this == Multiply)
-                return new Number(first.Value * second.Value);
-            else if (this == Divide)
-                return new Number(first.Value / second.Value);
-            else if (this == Power)
-                return new Number(Math.Pow(first.Value, second.Value));
-            else
-                throw new ArgumentException("Unknown operator: " + this.Value);
+            return _action(first, second);
         }
 
         public bool LeftAssociative()
         {
-            return this == Add || this == Subtract || this == Multiply || this == Divide;
-        }
-
-        private static int Precedence(Operator op)
-        {
-            if (op == Add || op == Subtract)
-                return 0;
-            if (op == Multiply || op == Divide)
-                return 1;
-            if (op == Power)
-                return 2;
-            throw new ArgumentException("Operator not recognized: " + op);
-        }
-
-        public static bool operator ==(Operator first, Operator second)
-        {
-            return first.Value == second.Value;
-        }
-
-        public static bool operator !=(Operator first, Operator second)
-        {
-            return first.Value != second.Value;
-        }
-
-        public bool Equals(Operator other)
-        {
-            return Value == other.Value;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Operator && Equals((Operator) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return Value.ToString();
+            return Assoc == Associativity.Left;
         }
     }
 }
